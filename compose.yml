@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg18
+    container_name: postgres18_vector
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    shm_size: 256mb
+
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: pgweb
+    restart: unless-stopped
+    ports:
+      - "${PG_WEB_PORT}:8081"
+    environment:
+      PGWEB_DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DATABASE}?sslmode=disable
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
