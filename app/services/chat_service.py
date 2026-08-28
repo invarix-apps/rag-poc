@@ -5,6 +5,7 @@ from typing import Literal
 from pydantic_ai import ModelMessage
 
 from app.config import get_settings
+from app.errors import MissingModelApiKeyError
 from app.lib.agent import create_agent
 
 
@@ -20,7 +21,7 @@ class ChatService:
     def __init__(self) -> None:
         key = get_settings().open_router_api_key
         if not key:
-            raise RuntimeError("AI API Key")
+            raise MissingModelApiKeyError()
         self.__agent = create_agent(
             "openrouter:deepseek/deepseek-v4-pro-0813", api_key=key
         )

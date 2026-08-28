@@ -18,12 +18,19 @@ class Settings(BaseSettings):
     postgres_user: str
     postgres_password: str
 
+    jwt_secret: str
+    jwt_algorithm: str = "HS256"
+    jwt_expire_minutes: int = 60 * 24
+
     log_level: LogLevel = "INFO"
 
     logfire_token: str | None = None
     logfire_service_name: str = "rag-poc"
     logfire_environment: str = "local"
     logfire_console: bool = False
+
+    embedding_model: str = "gemini-embedding-001"
+    embedding_dimensions: int = 1536
 
     gemini_api_key: str | None = Field(default=None)
     open_router_api_key: str | None = Field(default=None)
