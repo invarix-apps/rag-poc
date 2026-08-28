@@ -1,3 +1,12 @@
+from app.errors.ai import (
+    AgentNotFoundError,
+    AiAccessDeniedError,
+    ApiKeyNotFoundError,
+    OwnProviderNotAllowedError,
+    ProviderNotFoundError,
+    SystemProviderRequiredError,
+    SystemResourceReadOnlyError,
+)
 from app.errors.auth import (
     EmailAlreadyRegisteredError,
     InvalidCredentialsError,
@@ -12,6 +21,9 @@ from app.errors.health import DatabaseUnavailableError
 
 __all__ = [
     "AdrNotFoundError",
+    "AgentNotFoundError",
+    "AiAccessDeniedError",
+    "ApiKeyNotFoundError",
     "AppError",
     "DatabaseUnavailableError",
     "EmailAlreadyRegisteredError",
@@ -19,7 +31,11 @@ __all__ = [
     "InvalidTokenError",
     "MissingEmbeddingApiKeyError",
     "MissingModelApiKeyError",
+    "OwnProviderNotAllowedError",
+    "ProviderNotFoundError",
     "StoryNotFoundError",
+    "SystemProviderRequiredError",
+    "SystemResourceReadOnlyError",
     "UserNotFoundError",
     "register_error_handlers",
 ]

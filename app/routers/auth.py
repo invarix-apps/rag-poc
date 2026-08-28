@@ -15,7 +15,10 @@ async def register(
     payload: RegisterRequest, auth_service: AuthServiceDep
 ) -> UserResponse:
     user = await auth_service.register(
-        name=payload.name, email=payload.email, password=payload.password
+        name=payload.name,
+        email=payload.email,
+        password=payload.password,
+        plan=payload.plan,
     )
     return UserResponse.model_validate(user)
 

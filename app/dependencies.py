@@ -11,9 +11,12 @@ from app.errors import AppError, InvalidTokenError, UserNotFoundError
 from app.lib.security import decode_access_token
 from app.logging import RequestLogger, logger, request_logger
 from app.services import (
+    AgentService,
+    ApiKeyService,
     AuthService,
     ChatService,
     DocumentService,
+    ProviderService,
     create_adr_service,
     create_story_service,
 )
@@ -126,3 +129,24 @@ def get_story_service(session: SessionDep) -> DocumentService[Story]:
 
 AdrServiceDep = Annotated[DocumentService[Adr], Depends(get_adr_service)]
 StoryServiceDep = Annotated[DocumentService[Story], Depends(get_story_service)]
+
+
+def get_provider_service(session: SessionDep, user: CurrentUserDep) -> ProviderService:
+    return ProviderService(session, user)
+
+
+ProviderServiceDep = Annotated[ProviderService, Depends(get_provider_service)]
+
+
+def get_api_key_service(session: SessionDep, user: CurrentUserDep) -> ApiKeyService:
+    return ApiKeyService(session, user)
+
+
+ApiKeyServiceDep = Annotated[ApiKeyService, Depends(get_api_key_service)]
+
+
+def get_agent_service(session: SessionDep, user: CurrentUserDep) -> AgentService:
+    return AgentService(session, user)
+
+
+AgentServiceDep = Annotated[AgentService, Depends(get_agent_service)]
