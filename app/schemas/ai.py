@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, SecretStr
 
 
 class ProviderCreate(BaseModel):
@@ -31,12 +31,12 @@ class ProviderResponse(BaseModel):
 
 class ApiKeyCreate(BaseModel):
     name: str = Field(min_length=1, max_length=128)
-    secret: str = Field(min_length=8)
+    secret: SecretStr = Field(min_length=8)
 
 
 class ApiKeyUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=128)
-    secret: str | None = Field(default=None, min_length=8)
+    secret: SecretStr | None = Field(default=None, min_length=8)
 
 
 class ApiKeyResponse(BaseModel):

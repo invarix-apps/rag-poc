@@ -43,3 +43,21 @@ class SystemProviderRequiredError(AppError):
     code = "system_provider_required"
     message = "Plano permite apenas chaves de providers do sistema"
     status_code = status.HTTP_403_FORBIDDEN
+
+
+class SecretEncryptionUnavailableError(AppError):
+    code = "secret_encryption_unavailable"
+    message = "ENCRYPTION_KEYS nao configurada"
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+
+
+class InvalidEncryptionKeyError(AppError):
+    code = "invalid_encryption_key"
+    message = "ENCRYPTION_KEYS invalida"
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+
+
+class SecretDecryptionError(AppError):
+    code = "secret_decryption_failed"
+    message = "Falha ao decifrar a chave de API"
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -13,7 +13,7 @@ async def create_api_key(
     provider_id: uuid.UUID, payload: ApiKeyCreate, service: ApiKeyServiceDep
 ) -> ApiKeyResponse:
     api_key = await service.create(
-        provider_id, name=payload.name, secret=payload.secret
+        provider_id, name=payload.name, secret=payload.secret.get_secret_value()
     )
     return ApiKeyResponse.model_validate(api_key)
 
@@ -22,9 +22,7 @@ async def create_api_key(
 async def list_api_keys(
     provider_id: uuid.UUID, service: ApiKeyServiceDep
 ) -> list[ApiKeyResponse]:
-    return [
-        ApiKeyResponse.model_validate(k) for k in await service.list(provider_id)
-    ]
+    return [ApiKeyResponse.model_validate(k) for k in await service.list(provider_id)]
 
 
 @router.get("/{api_key_id}")
@@ -42,7 +40,12 @@ async def update_api_key(
     service: ApiKeyServiceDep,
 ) -> ApiKeyResponse:
     api_key = await service.update(
-        provider_id, api_key_id, name=payload.name, secret=payload.secret
+        provider_id,
+        api_key_id,
+        name=payload.name,
+        secret=payload.secret.get_secret_value()
+        if payload.secret is not None
+        else None,
     )
     return ApiKeyResponse.model_validate(api_key)
 

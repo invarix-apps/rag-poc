@@ -9,6 +9,11 @@ default:
 dev:
     uv run fastapi dev app/api.py
 
+# gera uma chave nova pro ENCRYPTION_KEYS (ex: v1:...)
+[group('dev')]
+encryption-key version="v1":
+    @uv run python -c "from app.lib.crypto import generate_key; print('{{version}}:' + generate_key())"
+
 # sobe postgres + pgweb em background
 [group('docker')]
 up:

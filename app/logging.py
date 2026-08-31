@@ -1,6 +1,6 @@
 import logging
 import sys
-from collections.abc import MutableMapping
+from collections.abc import Mapping, MutableMapping
 from typing import Any
 
 import logfire
@@ -19,6 +19,8 @@ _CONSOLE_LEVELS: dict[LogLevel, logfire.LevelName] = {
     "DEBUG": "debug",
 }
 
+ECHOED_KEYS = ("input", "url")
+
 logger = logging.getLogger("app")
 request_logger = logging.getLogger("app.request")
 
@@ -29,6 +31,20 @@ class RequestLogger(logging.LoggerAdapter[logging.Logger]):
     ) -> tuple[str, MutableMapping[str, Any]]:
         request_id = (self.extra or {}).get("request_id")
         return f"[{request_id}] {msg}", kwargs
+
+
+def drop_echoed_input(request: Any, attributes: dict[str, Any]) -> dict[str, Any]:
+    errors = attributes.get("errors")
+    if not isinstance(errors, list):
+        return attributes
+
+    attributes["errors"] = [
+        {k: v for k, v in error.items() if k not in ECHOED_KEYS}
+        if isinstance(error, Mapping)
+        else error
+        for error in errors
+    ]
+    return attributes
 
 
 def configure_logging(app: FastAPI) -> None:
@@ -45,11 +61,13 @@ def configure_logging(app: FastAPI) -> None:
         environment=settings.logfire_environment,
         token=settings.logfire_token,
         send_to_logfire="if-token-present",
-        console=logfire.ConsoleOptions(min_log_level=_CONSOLE_LEVELS[settings.log_level])
+        console=logfire.ConsoleOptions(
+            min_log_level=_CONSOLE_LEVELS[settings.log_level]
+        )
         if settings.logfire_console
         else False,
     )
-    logfire.instrument_fastapi(app)
+    logfire.instrument_fastapi(app, request_attributes_mapper=drop_echoed_input)
     logfire.instrument_pydantic_ai()
     logger.addHandler(logfire.LogfireLoggingHandler())
 

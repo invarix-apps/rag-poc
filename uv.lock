@@ -1871,6 +1871,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "alembic" },
+    { name = "cryptography" },
     { name = "fastapi", extra = ["standard"] },
     { name = "logfire", extra = ["fastapi", "psycopg", "sqlalchemy"] },
     { name = "passlib", extra = ["argon2"] },
@@ -1891,6 +1892,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", specifier = ">=1.19.1" },
+    { name = "cryptography", specifier = ">=50.0.1" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.141.1" },
     { name = "logfire", extras = ["fastapi", "psycopg", "sqlalchemy"], specifier = ">=4.41.0" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.4" },

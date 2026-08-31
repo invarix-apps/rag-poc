@@ -9,7 +9,7 @@ from app.schemas.ai import (
     ProviderResponse,
     ProviderUpdate,
 )
-from app.schemas.auth import RegisterRequest, TokenResponse
+from app.schemas.auth import LoginForm, RegisterRequest, TokenResponse
 from app.schemas.chat import (
     ChatCreate,
     ChatDelta,
@@ -47,6 +47,7 @@ __all__ = [
     "DocumentUpdate",
     "EmbeddingResponse",
     "HealthResponse",
+    "LoginForm",
     "ProviderCreate",
     "ProviderResponse",
     "ProviderUpdate",

@@ -21,7 +21,4 @@ class ApiKey(Base, TimestampMixin):
     )
     name: Mapped[str] = mapped_column(String(128))
     secret: Mapped[str] = mapped_column(Text)
-
-    @property
-    def last4(self) -> str:
-        return self.secret[-4:]
+    last4: Mapped[str] = mapped_column(String(4))

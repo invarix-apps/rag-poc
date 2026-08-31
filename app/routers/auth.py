@@ -1,10 +1,9 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Form, status
 
 from app.dependencies import AuthServiceDep, CurrentUserDep
-from app.schemas import RegisterRequest, TokenResponse, UserResponse
+from app.schemas import LoginForm, RegisterRequest, TokenResponse, UserResponse
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 users_router = APIRouter(prefix="/users", tags=["users"])
@@ -17,7 +16,7 @@ async def register(
     user = await auth_service.register(
         name=payload.name,
         email=payload.email,
-        password=payload.password,
+        password=payload.password.get_secret_value(),
         plan=payload.plan,
     )
     return UserResponse.model_validate(user)
@@ -25,10 +24,10 @@ async def register(
 
 @router.post("/login")
 async def login(
-    form: Annotated[OAuth2PasswordRequestForm, Depends()],
+    form: Annotated[LoginForm, Form()],
     auth_service: AuthServiceDep,
 ) -> TokenResponse:
-    token = await auth_service.login(form.username, form.password)
+    token = await auth_service.login(form.username, form.password.get_secret_value())
     return TokenResponse(access_token=token)
 
 

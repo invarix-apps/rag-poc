@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import AgentConfig, Chat, ChatMessage, MessageRole, User
 from app.errors import AppError, ChatNotFoundError, ChatResponseFailedError
 from app.lib.agent import create_agent
+from app.lib.crypto import unseal
 from app.services.agent_service import AgentService
 
 
@@ -114,7 +115,8 @@ class ChatService:
 
     async def __resolve_key(self, config: AgentConfig) -> tuple[str, str | None]:
         api_key, provider = await self.__agents.resolve_usable_key(config.api_key_id)
-        return api_key.secret, provider.base_url
+        secret = unseal(api_key.secret, api_key.provider_id, api_key.id)
+        return secret, provider.base_url
 
     async def __list_messages(self, chat_id: uuid.UUID) -> list[ChatMessage]:
         result = await self.__session.execute(
