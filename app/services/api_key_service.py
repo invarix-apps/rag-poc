@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import ApiKey, User
 from app.errors import ApiKeyNotFoundError
-from app.lib.crypto import seal
 from app.services.provider_service import ProviderService
 
 
@@ -33,39 +32,6 @@ class ApiKeyService:
         api_key = result.scalar_one_or_none()
         if api_key is None:
             raise ApiKeyNotFoundError()
-        return api_key
-
-    async def create(self, provider_id: uuid.UUID, name: str, secret: str) -> ApiKey:
-        provider = await self.__providers.get_owned(provider_id)
-        api_key_id = uuid.uuid7()
-        api_key = ApiKey(
-            id=api_key_id,
-            provider_id=provider.id,
-            name=name,
-            secret=seal(secret, provider.id, api_key_id),
-            last4=secret[-4:],
-        )
-        self.__session.add(api_key)
-        await self.__session.commit()
-        await self.__session.refresh(api_key)
-        return api_key
-
-    async def update(
-        self,
-        provider_id: uuid.UUID,
-        api_key_id: uuid.UUID,
-        name: str | None = None,
-        secret: str | None = None,
-    ) -> ApiKey:
-        await self.__providers.get_owned(provider_id)
-        api_key = await self.get(provider_id, api_key_id)
-        if name is not None:
-            api_key.name = name
-        if secret is not None:
-            api_key.secret = seal(secret, api_key.provider_id, api_key.id)
-            api_key.last4 = secret[-4:]
-        await self.__session.commit()
-        await self.__session.refresh(api_key)
         return api_key
 
     async def delete(self, provider_id: uuid.UUID, api_key_id: uuid.UUID) -> None:

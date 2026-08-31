@@ -9,6 +9,11 @@ default:
 dev:
     uv run fastapi dev app/api.py
 
+# popula o banco com um usuario de teste, documentos, agente e chat
+[group('dev')]
+seed:
+    uv run python -m scripts.seed
+
 # gera uma chave nova pro ENCRYPTION_KEYS (ex: v1:...)
 [group('dev')]
 encryption-key version="v1":

@@ -1,11 +1,15 @@
 import uuid
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.db.models.mixins import TimestampMixin
+
+if TYPE_CHECKING:
+    from app.db.models.api_key import ApiKey
 
 
 class Provider(Base, TimestampMixin):
@@ -22,6 +26,13 @@ class Provider(Base, TimestampMixin):
         ForeignKey("users.id", ondelete="CASCADE"),
         index=True,
         default=None,
+    )
+
+    api_keys: Mapped[list[ApiKey]] = relationship(
+        back_populates="provider",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+        order_by="ApiKey.created_at",
     )
 
     @property

@@ -30,7 +30,7 @@ def create_agent(
     instructions: str | None = None,
     tools: Sequence[Tool[None]] = (),
     capabilities: Sequence[AgentCapability[None]] = (),
-) -> Agent:
+) -> Agent[None, str]:
     return Agent(
         model=create_model(model, api_key, base_url),
         instructions=instructions,

@@ -105,7 +105,7 @@ class ChatService:
         answer = await self.__save_exchange(chat, input, "".join(chunks))
         await on_done(answer.id)
 
-    async def __build_agent(self, agent_id: uuid.UUID) -> Agent:
+    async def __build_agent(self, agent_id: uuid.UUID) -> Agent[None, str]:
         config = await self.__agents.get(agent_id)
         api_key, base_url = await self.__resolve_key(config)
         toolkit = build_toolkit(

@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import FastAPI, Request, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 
@@ -38,11 +39,13 @@ async def validation_error_handler(request: Request, exc: Exception) -> Response
 
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-        content={
-            "code": "validation_error",
-            "message": "Payload invalido",
-            "details": details,
-        },
+        content=jsonable_encoder(
+            {
+                "code": "validation_error",
+                "message": "Payload invalido",
+                "details": details,
+            }
+        ),
     )
 
 

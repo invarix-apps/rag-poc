@@ -1,7 +1,6 @@
 from app.routers import (
     adrs,
     agents,
-    api_keys,
     auth,
     chats,
     health,
@@ -14,7 +13,6 @@ ROUTERS = [
     auth.router,
     auth.users_router,
     providers.router,
-    api_keys.router,
     agents.router,
     adrs.router,
     stories.router,
@@ -25,7 +23,6 @@ __all__ = [
     "ROUTERS",
     "adrs",
     "agents",
-    "api_keys",
     "auth",
     "chats",
     "health",
