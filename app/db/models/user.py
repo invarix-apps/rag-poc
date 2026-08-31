@@ -5,12 +5,8 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
-from app.db.models.enums import UserPlan
+from app.db.models.enums import UserPlan, enum_values
 from app.db.models.mixins import TimestampMixin
-
-
-def plan_values(enum: type[UserPlan]) -> list[str]:
-    return [member.value for member in enum]
 
 
 class User(Base, TimestampMixin):
@@ -28,7 +24,7 @@ class User(Base, TimestampMixin):
             name="user_plan",
             native_enum=False,
             length=16,
-            values_callable=plan_values,
+            values_callable=enum_values,
         ),
         default=UserPlan.NO_AI,
         server_default=UserPlan.NO_AI.value,

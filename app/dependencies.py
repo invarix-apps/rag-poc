@@ -44,13 +44,6 @@ def get_logger(request: Request) -> RequestLogger:
 LoggerDep = Annotated[RequestLogger, Depends(get_logger)]
 
 
-def get_chat_service() -> ChatService:
-    return ChatService()
-
-
-ChatServiceDep = Annotated[ChatService, Depends(get_chat_service)]
-
-
 def get_auth_service(session: SessionDep) -> AuthService:
     return AuthService(session)
 
@@ -117,6 +110,20 @@ async def get_ws_current_user(
 
 
 WsCurrentUserDep = Annotated[User, Depends(get_ws_current_user)]
+
+
+def get_chat_service(session: SessionDep, user: CurrentUserDep) -> ChatService:
+    return ChatService(session, user)
+
+
+ChatServiceDep = Annotated[ChatService, Depends(get_chat_service)]
+
+
+def get_ws_chat_service(session: WsSessionDep, user: WsCurrentUserDep) -> ChatService:
+    return ChatService(session, user)
+
+
+WsChatServiceDep = Annotated[ChatService, Depends(get_ws_chat_service)]
 
 
 def get_adr_service(session: SessionDep) -> DocumentService[Adr]:

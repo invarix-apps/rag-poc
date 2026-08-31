@@ -10,7 +10,15 @@ from app.schemas.ai import (
     ProviderUpdate,
 )
 from app.schemas.auth import RegisterRequest, TokenResponse
-from app.schemas.chat import ChatDelta, ChatDone
+from app.schemas.chat import (
+    ChatCreate,
+    ChatDelta,
+    ChatDone,
+    ChatError,
+    ChatMessageResponse,
+    ChatResponse,
+    ChatUpdate,
+)
 from app.schemas.document import (
     DocumentCreate,
     DocumentResponse,
@@ -27,8 +35,13 @@ __all__ = [
     "ApiKeyCreate",
     "ApiKeyResponse",
     "ApiKeyUpdate",
+    "ChatCreate",
     "ChatDelta",
     "ChatDone",
+    "ChatError",
+    "ChatMessageResponse",
+    "ChatResponse",
+    "ChatUpdate",
     "DocumentCreate",
     "DocumentResponse",
     "DocumentUpdate",

@@ -14,7 +14,12 @@ from app.errors.auth import (
     UserNotFoundError,
 )
 from app.errors.base import AppError
-from app.errors.chat import MissingEmbeddingApiKeyError, MissingModelApiKeyError
+from app.errors.chat import (
+    ChatNotFoundError,
+    ChatResponseFailedError,
+    MissingEmbeddingApiKeyError,
+    MissingModelApiKeyError,
+)
 from app.errors.documents import AdrNotFoundError, StoryNotFoundError
 from app.errors.handlers import register_error_handlers
 from app.errors.health import DatabaseUnavailableError
@@ -25,6 +30,8 @@ __all__ = [
     "AiAccessDeniedError",
     "ApiKeyNotFoundError",
     "AppError",
+    "ChatNotFoundError",
+    "ChatResponseFailedError",
     "DatabaseUnavailableError",
     "EmailAlreadyRegisteredError",
     "InvalidCredentialsError",

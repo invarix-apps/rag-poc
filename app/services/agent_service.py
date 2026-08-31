@@ -45,7 +45,7 @@ class AgentService:
         instructions: str | None = None,
     ) -> AgentConfig:
         self.__require_ai()
-        await self.__require_usable_key(api_key_id)
+        await self.resolve_usable_key(api_key_id)
 
         agent = AgentConfig(
             name=name,
@@ -73,7 +73,7 @@ class AgentService:
         if model is not None:
             agent.model = model
         if api_key_id is not None:
-            await self.__require_usable_key(api_key_id)
+            await self.resolve_usable_key(api_key_id)
             agent.api_key_id = api_key_id
         if instructions is not None:
             agent.instructions = instructions
@@ -92,7 +92,9 @@ class AgentService:
             raise SystemResourceReadOnlyError()
         return agent
 
-    async def __require_usable_key(self, api_key_id: uuid.UUID) -> ApiKey:
+    async def resolve_usable_key(
+        self, api_key_id: uuid.UUID
+    ) -> tuple[ApiKey, Provider]:
         result = await self.__session.execute(
             select(ApiKey, Provider)
             .join(Provider, Provider.id == ApiKey.provider_id)
@@ -111,7 +113,7 @@ class AgentService:
         api_key, provider = row.tuple()
         if self.__user.plan is UserPlan.SYSTEM_AI and provider.owner_id is not None:
             raise SystemProviderRequiredError()
-        return api_key
+        return api_key, provider
 
     def __require_ai(self) -> None:
         if self.__user.plan is UserPlan.NO_AI:

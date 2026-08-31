@@ -21,5 +21,12 @@ def create_model(model: str, api_key: str, base_url: str | None = None) -> Model
     return infer_model(model, provider_factory=provider_factory)
 
 
-def create_agent(model: str, api_key: str, base_url: str | None = None) -> Agent:
-    return Agent(model=create_model(model, api_key, base_url))
+def create_agent(
+    model: str,
+    api_key: str,
+    base_url: str | None = None,
+    instructions: str | None = None,
+) -> Agent:
+    return Agent(
+        model=create_model(model, api_key, base_url), instructions=instructions
+    )
