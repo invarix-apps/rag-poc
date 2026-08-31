@@ -1,4 +1,5 @@
 import uuid
+from collections.abc import Sequence
 
 from sqlalchemy import ColumnElement, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +12,7 @@ from app.errors import (
     SystemProviderRequiredError,
     SystemResourceReadOnlyError,
 )
+from app.services.tool_factory import parse_tool
 
 
 class AgentService:
@@ -43,6 +45,7 @@ class AgentService:
         model: str,
         api_key_id: uuid.UUID,
         instructions: str | None = None,
+        tools: Sequence[str] = (),
     ) -> AgentConfig:
         self.__require_ai()
         await self.resolve_usable_key(api_key_id)
@@ -52,6 +55,7 @@ class AgentService:
             model=model,
             api_key_id=api_key_id,
             instructions=instructions,
+            tools=self.__parse_tools(tools),
             owner_id=self.__user.id,
         )
         self.__session.add(agent)
@@ -66,6 +70,7 @@ class AgentService:
         model: str | None = None,
         api_key_id: uuid.UUID | None = None,
         instructions: str | None = None,
+        tools: Sequence[str] | None = None,
     ) -> AgentConfig:
         agent = await self.__get_owned(agent_id)
         if name is not None:
@@ -77,6 +82,8 @@ class AgentService:
             agent.api_key_id = api_key_id
         if instructions is not None:
             agent.instructions = instructions
+        if tools is not None:
+            agent.tools = self.__parse_tools(tools)
         await self.__session.commit()
         await self.__session.refresh(agent)
         return agent
@@ -85,6 +92,9 @@ class AgentService:
         agent = await self.__get_owned(agent_id)
         await self.__session.delete(agent)
         await self.__session.commit()
+
+    def __parse_tools(self, tools: Sequence[str]) -> list[str]:
+        return [parse_tool(name).value for name in dict.fromkeys(tools)]
 
     async def __get_owned(self, agent_id: uuid.UUID) -> AgentConfig:
         agent = await self.get(agent_id)

@@ -3,6 +3,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, SecretStr
 
+from app.db.models import AgentTool
+
 
 class ProviderCreate(BaseModel):
     name: str = Field(min_length=1, max_length=128)
@@ -55,6 +57,7 @@ class AgentCreate(BaseModel):
     model: str = Field(min_length=1, max_length=128)
     api_key_id: uuid.UUID
     instructions: str | None = Field(default=None)
+    tools: list[AgentTool] = Field(default_factory=list)
 
 
 class AgentUpdate(BaseModel):
@@ -62,6 +65,7 @@ class AgentUpdate(BaseModel):
     model: str | None = Field(default=None, min_length=1, max_length=128)
     api_key_id: uuid.UUID | None = Field(default=None)
     instructions: str | None = Field(default=None)
+    tools: list[AgentTool] | None = Field(default=None)
 
 
 class AgentResponse(BaseModel):
@@ -71,6 +75,7 @@ class AgentResponse(BaseModel):
     name: str
     model: str
     instructions: str | None
+    tools: list[AgentTool]
     api_key_id: uuid.UUID
     owner_id: uuid.UUID | None
     is_system: bool

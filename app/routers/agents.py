@@ -17,6 +17,7 @@ async def create_agent(
         model=payload.model,
         api_key_id=payload.api_key_id,
         instructions=payload.instructions,
+        tools=payload.tools,
     )
     return AgentResponse.model_validate(agent)
 
@@ -41,6 +42,7 @@ async def update_agent(
         model=payload.model,
         api_key_id=payload.api_key_id,
         instructions=payload.instructions,
+        tools=payload.tools,
     )
     return AgentResponse.model_validate(agent)
 

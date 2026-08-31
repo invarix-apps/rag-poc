@@ -9,6 +9,7 @@ from app.errors.ai import (
     SecretEncryptionUnavailableError,
     SystemProviderRequiredError,
     SystemResourceReadOnlyError,
+    UnknownAgentToolError,
 )
 from app.errors.auth import (
     EmailAlreadyRegisteredError,
@@ -49,6 +50,7 @@ __all__ = [
     "StoryNotFoundError",
     "SystemProviderRequiredError",
     "SystemResourceReadOnlyError",
+    "UnknownAgentToolError",
     "UserNotFoundError",
     "register_error_handlers",
 ]

@@ -25,3 +25,9 @@ async def embed_document(text: str) -> tuple[str, list[float]]:
     model = get_embedding_model()
     result = await model.embed(text, input_type="document")
     return model.model_name, list(result.embeddings[0])
+
+
+async def embed_query(text: str) -> tuple[str, list[float]]:
+    model = get_embedding_model()
+    result = await model.embed(text, input_type="query")
+    return model.model_name, list(result.embeddings[0])

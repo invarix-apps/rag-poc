@@ -17,9 +17,7 @@ router = APIRouter(prefix="/stories", tags=["stories"])
 async def create_story(
     payload: DocumentCreate, service: StoryServiceDep, user: CurrentUserDep
 ) -> DocumentResponse:
-    story = await service.create(
-        name=payload.name, content=payload.content, created_by=user.id
-    )
+    story = await service.create(name=payload.name, content=payload.content)
     return DocumentResponse.model_validate(story)
 
 

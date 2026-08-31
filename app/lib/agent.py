@@ -1,6 +1,8 @@
+from collections.abc import Sequence
 from typing import Any
 
-from pydantic_ai import Agent
+from pydantic_ai import Agent, Tool
+from pydantic_ai.capabilities import AgentCapability
 from pydantic_ai.models import Model, infer_model
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers import Provider, infer_provider_class
@@ -26,7 +28,12 @@ def create_agent(
     api_key: str,
     base_url: str | None = None,
     instructions: str | None = None,
+    tools: Sequence[Tool[None]] = (),
+    capabilities: Sequence[AgentCapability[None]] = (),
 ) -> Agent:
     return Agent(
-        model=create_model(model, api_key, base_url), instructions=instructions
+        model=create_model(model, api_key, base_url),
+        instructions=instructions,
+        tools=tools,
+        capabilities=capabilities or None,
     )

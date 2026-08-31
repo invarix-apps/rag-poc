@@ -126,12 +126,14 @@ def get_ws_chat_service(session: WsSessionDep, user: WsCurrentUserDep) -> ChatSe
 WsChatServiceDep = Annotated[ChatService, Depends(get_ws_chat_service)]
 
 
-def get_adr_service(session: SessionDep) -> DocumentService[Adr]:
-    return create_adr_service(session)
+def get_adr_service(session: SessionDep, user: CurrentUserDep) -> DocumentService[Adr]:
+    return create_adr_service(session, user)
 
 
-def get_story_service(session: SessionDep) -> DocumentService[Story]:
-    return create_story_service(session)
+def get_story_service(
+    session: SessionDep, user: CurrentUserDep
+) -> DocumentService[Story]:
+    return create_story_service(session, user)
 
 
 AdrServiceDep = Annotated[DocumentService[Adr], Depends(get_adr_service)]

@@ -14,3 +14,9 @@ class UserPlan(StrEnum):
 class MessageRole(StrEnum):
     USER = "user"
     ASSISTANT = "assistant"
+
+
+class AgentTool(StrEnum):
+    WEB_SEARCH = "web_search"
+    SEARCH_ADRS = "search_adrs"
+    SEARCH_STORIES = "search_stories"

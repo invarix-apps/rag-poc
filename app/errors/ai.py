@@ -61,3 +61,9 @@ class SecretDecryptionError(AppError):
     code = "secret_decryption_failed"
     message = "Falha ao decifrar a chave de API"
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+class UnknownAgentToolError(AppError):
+    code = "unknown_agent_tool"
+    message = "Ferramenta desconhecida"
+    status_code = status.HTTP_400_BAD_REQUEST

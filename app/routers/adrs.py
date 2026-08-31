@@ -17,9 +17,7 @@ router = APIRouter(prefix="/adrs", tags=["adrs"])
 async def create_adr(
     payload: DocumentCreate, service: AdrServiceDep, user: CurrentUserDep
 ) -> DocumentResponse:
-    adr = await service.create(
-        name=payload.name, content=payload.content, created_by=user.id
-    )
+    adr = await service.create(name=payload.name, content=payload.content)
     return DocumentResponse.model_validate(adr)
 
 

@@ -18,6 +18,8 @@ from app.errors import AppError, ChatNotFoundError, ChatResponseFailedError
 from app.lib.agent import create_agent
 from app.lib.crypto import unseal
 from app.services.agent_service import AgentService
+from app.services.document_search_service import DocumentSearchService
+from app.services.tool_factory import build_toolkit
 
 
 class ChatService:
@@ -106,11 +108,16 @@ class ChatService:
     async def __build_agent(self, agent_id: uuid.UUID) -> Agent:
         config = await self.__agents.get(agent_id)
         api_key, base_url = await self.__resolve_key(config)
+        toolkit = build_toolkit(
+            config.tools, DocumentSearchService(self.__session, self.__user)
+        )
         return create_agent(
             config.model,
             api_key=api_key,
             base_url=base_url,
             instructions=config.instructions,
+            tools=toolkit.tools,
+            capabilities=toolkit.capabilities,
         )
 
     async def __resolve_key(self, config: AgentConfig) -> tuple[str, str | None]:
